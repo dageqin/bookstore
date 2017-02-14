@@ -1,0 +1,27 @@
+<div class="panel panel-default col-md-4">
+    <div ng-show="flag" class="panel-heading">{{book.bookName}}</div>
+    <input ng-hide="flag" type="text" ng-model="book.bookName">
+    <div class="panel-body">
+        <img ng-src="{{book.bookCover}}" alt="" style="width: 250px;height: 300px">
+    </div>
+    <div ng-show="flag" class="panel-footer">{{book.bookPrice|currency:'￥'}}</div>
+    <input ng-hide="flag" type="text" ng-model="book.bookPrice">
+    <button class="btn btn-danger" ng-show="flag" ng-click="remove()">删除</button>
+    <button class="btn btn-warning" ng-show="flag" ng-click="change()">修改</button>
+    <button class="btn btn-default" ng-hide="flag" ng-click="renew()">确定</button>
+    <button class="btn btn-default" ng-hide="flag" ng-click="cancel()">取消</button>
+</div>
+<!--
+<div class="panel panel-default col-md-4">
+    <div ng-show="flag" class="panel-heading">{{book.bookName}}</div>
+    <input ng-hide="flag" type="text" ng-model="book.bookName">
+    <div class="panel-body">
+        <img ng-src="{{book.bookCover}}" alt="">
+    </div>
+    <div ng-show="flag" class="panel-footer">{{book.bookPrice|currency:'￥'}}</div>
+    <input ng-hide="flag" type="text" ng-model="book.bookPrice">
+    <button class="btn btn-danger" ng-show="flag" ng-click="remove()">删除</button>
+    <button class="btn btn-warning" ng-show="flag" ng-click="change()">修改</button>
+    <button class="btn btn-default" ng-hide="flag" ng-click="update()">确定</button>
+    <button class="btn btn-default" ng-hide="flag">取消</button>
+</div>-->

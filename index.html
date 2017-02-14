@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="kathyModule">
+<head>
+    <meta charset="UTF-8">
+    <title>bookstore</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+<div class="navbar navbar-inverse text-center">
+    <div class="container-fluid" style="font-size: 18px">
+    <div class="navbar navbar-brand"><a href="#!/home">BookStore</a></div>
+        <ul class="nav nav-pills" role="tablist" style="margin-top: 5px">
+            <li role="presentation" class="active"><a href="#!/home">首页</a></li>
+            <li role="presentation"><a href="#!/list">列表页</a></li>
+            <li role="presentation"><a href="#!/add">新增图书</a></li>
+        </ul>
+    </div>
+</div>
+
+
+<div ng-view="" class="container"></div>
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+<script src="node_modules/angular/angular.js"></script>
+<script src="node_modules/angular-resource/angular-resource.js"></script>
+<script src="node_modules/angular-route/angular-route.js"></script>
+
+<script>
+    var app=angular.module('kathyModule',['ngResource','ngRoute']);
+    app.factory('$books',function ($resource) {
+        return $resource('/books/:bid',null,{update:{method:'PUT'}});
+    });
+    app.config(function ($routeProvider) {
+        $routeProvider.when('/home',{
+            templateUrl:'tmpl/home.html',
+            controller:'homeCtr'
+        }).when('/list',{
+            templateUrl:'tmpl/list.html',
+            controller:'listCtr'
+        }).when('/add',{
+            templateUrl:'tmpl/add.html',
+            controller:'addCtr'
+        }).when('/detail/:id',{
+            templateUrl:'tmpl/detail.html',
+            controller:'detailCtr'
+        }).otherwise('/home')
+    });
+    app.controller('homeCtr',function ($scope,$sce) {
+        $scope.home=$sce.trustAsHtml('<h1>Welcome To Bookstore!</h1>');
+        $('.carousel').carousel({
+            interval: 2000
+        });
+    });
+    app.controller('listCtr',function ($scope,$books) {
+        $scope.books=$books.query();
+    });
+    app.controller('detailCtr',function ($scope,$books,$routeParams,$location) {
+        $scope.flag=true;
+        $scope.book=$books.get({bid:$routeParams.id});
+        $scope.change=function () {
+            $scope.flag=false;
+        };
+        $scope.cancel=function () {
+            $scope.flag=true;
+            $scope.book=$books.get({bid:$routeParams.id});
+        };
+        $scope.renew=function () {
+            $books.update({bid:$routeParams.id},$scope.book).$promise.then(function () {
+                $scope.flag=true;
+            });
+        };
+        $scope.remove=function () {
+            console.log($routeParams.id);
+            $books.delete({bid:$routeParams.id}).$promise.then(function () {
+                $location.path('/list');
+            })
+        }
+    });
+    app.controller('addCtr',function ($scope,$books,$location) {
+        $scope.add=function () {
+            $books.save($scope.book).$promise.then(function () {
+                $location.path('/list');
+            })
+        }
+    })
+</script>
+</body>
+</html>
